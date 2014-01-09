@@ -1,17 +1,179 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.9
+-- version 4.1.4
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Jan 04, 2014 at 02:50 PM
--- Server version: 5.1.53
--- PHP Version: 5.3.4
+-- Host: cpdbr.cxyu3tup9vgc.us-east-1.rds.amazonaws.com
+-- Generation Time: Jan 09, 2014 at 01:16 AM
+-- Server version: 5.5.27-log
+-- PHP Version: 5.4.23
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 --
 -- Database: `shak`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home`
+--
+
+CREATE TABLE IF NOT EXISTS `home` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `location` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `location` (`location`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home_location`
+--
+
+CREATE TABLE IF NOT EXISTS `home_location` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `latitude` double NOT NULL,
+  `longitude` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home_pushtospeech`
+--
+
+CREATE TABLE IF NOT EXISTS `home_pushtospeech` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `deviceid` varchar(40) NOT NULL,
+  `home` int(11) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `deviceid` (`deviceid`),
+  KEY `home` (`home`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home_pushtospeech_history`
+--
+
+CREATE TABLE IF NOT EXISTS `home_pushtospeech_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pushtospeech` int(11) NOT NULL,
+  `time` datetime NOT NULL,
+  `event` varchar(100) NOT NULL,
+  `text` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pushtospeech` (`pushtospeech`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home_weather`
+--
+
+CREATE TABLE IF NOT EXISTS `home_weather` (
+  `location` int(11) NOT NULL,
+  `time` datetime NOT NULL,
+  `summary` varchar(1000) DEFAULT NULL,
+  `icon` varchar(200) DEFAULT NULL,
+  `sunriseTime` datetime DEFAULT NULL,
+  `sunsetTime` datetime DEFAULT NULL,
+  `precipIntensity` double DEFAULT NULL,
+  `precipIntensityMax` double DEFAULT NULL,
+  `precipProbability` double DEFAULT NULL,
+  `precipType` varchar(100) DEFAULT NULL,
+  `temperatureMin` double DEFAULT NULL,
+  `temperatureMinTime` datetime DEFAULT NULL,
+  `temperatureMax` double DEFAULT NULL,
+  `temperatureMaxTime` datetime DEFAULT NULL,
+  `apparentTemperatureMin` double DEFAULT NULL,
+  `apparentTemperatureMinTime` datetime DEFAULT NULL,
+  `apparentTemperatureMax` double DEFAULT NULL,
+  `apparentTemperatureMaxTime` datetime DEFAULT NULL,
+  `dewPoint` double DEFAULT NULL,
+  `humidity` double DEFAULT NULL,
+  `windSpeed` double DEFAULT NULL,
+  `windBearing` double DEFAULT NULL,
+  `visibility` double DEFAULT NULL,
+  `cloudCover` double DEFAULT NULL,
+  `pressure` double DEFAULT NULL,
+  `ozone` double DEFAULT NULL,
+  `added` datetime NOT NULL,
+  `updated` datetime NOT NULL,
+  PRIMARY KEY (`location`,`time`),
+  KEY `location` (`location`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `person`
+--
+
+CREATE TABLE IF NOT EXISTS `person` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `home` int(11) NOT NULL,
+  `token` varchar(36) NOT NULL,
+  `firstName` varchar(50) NOT NULL,
+  `lastName` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `home` (`home`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `person_location_event`
+--
+
+CREATE TABLE IF NOT EXISTS `person_location_event` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `person` int(11) NOT NULL,
+  `place` int(11) NOT NULL,
+  `status` char(1) NOT NULL,
+  `occurred` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `person` (`person`),
+  KEY `place` (`place`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `person_location_recent`
+--
+
+CREATE TABLE IF NOT EXISTS `person_location_recent` (
+  `person` int(11) NOT NULL,
+  `place` int(11) NOT NULL,
+  `status` char(1) NOT NULL,
+  `occurred` datetime NOT NULL,
+  PRIMARY KEY (`person`,`place`,`status`),
+  KEY `person` (`person`),
+  KEY `place` (`place`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `person_place`
+--
+
+CREATE TABLE IF NOT EXISTS `person_place` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -28,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `smart_acceleration_event` (
   PRIMARY KEY (`pid`),
   UNIQUE KEY `eventid` (`eventid`),
   KEY `device` (`device`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -60,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `smart_battery_event` (
   PRIMARY KEY (`pid`),
   UNIQUE KEY `eventid` (`eventid`),
   KEY `device` (`device`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -92,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `smart_contact_event` (
   PRIMARY KEY (`pid`),
   UNIQUE KEY `eventid` (`eventid`),
   KEY `device` (`device`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -124,7 +286,74 @@ CREATE TABLE IF NOT EXISTS `smart_device` (
   PRIMARY KEY (`pid`),
   UNIQUE KEY `hub_location_device` (`hubid`,`locationid`,`deviceid`),
   KEY `hubid` (`hubid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `smart_device_details`
+--
+
+CREATE TABLE IF NOT EXISTS `smart_device_details` (
+  `pid` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `isInside` tinyint(1) NOT NULL DEFAULT '0',
+  `isOutside` tinyint(1) NOT NULL DEFAULT '0',
+  `isTarget` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pid`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `smart_device_type`
+--
+
+CREATE TABLE IF NOT EXISTS `smart_device_type` (
+  `pid` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(20) NOT NULL,
+  PRIMARY KEY (`pid`),
+  UNIQUE KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `smart_generic_event`
+--
+
+CREATE TABLE IF NOT EXISTS `smart_generic_event` (
+  `pid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `eventid` char(36) NOT NULL,
+  `device` int(11) NOT NULL,
+  `appId` char(36) DEFAULT NULL,
+  `descriptionText` varchar(100) DEFAULT NULL,
+  `source` varchar(20) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `value` varchar(100) DEFAULT NULL,
+  `unit` varchar(100) DEFAULT NULL,
+  `occurred` datetime NOT NULL,
+  PRIMARY KEY (`pid`),
+  UNIQUE KEY `eventid` (`eventid`),
+  KEY `device` (`device`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `smart_hub`
+--
+
+CREATE TABLE IF NOT EXISTS `smart_hub` (
+  `pid` int(11) NOT NULL AUTO_INCREMENT,
+  `hubid` char(36) NOT NULL,
+  `home` int(11) NOT NULL,
+  PRIMARY KEY (`pid`),
+  UNIQUE KEY `hubid` (`hubid`),
+  KEY `home` (`home`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -141,7 +370,7 @@ CREATE TABLE IF NOT EXISTS `smart_humidity_event` (
   PRIMARY KEY (`pid`),
   UNIQUE KEY `eventid` (`eventid`),
   KEY `device` (`device`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -173,7 +402,7 @@ CREATE TABLE IF NOT EXISTS `smart_illuminance_event` (
   PRIMARY KEY (`pid`),
   UNIQUE KEY `eventid` (`eventid`),
   KEY `device` (`device`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -237,7 +466,7 @@ CREATE TABLE IF NOT EXISTS `smart_motion_event` (
   PRIMARY KEY (`pid`),
   UNIQUE KEY `eventid` (`eventid`),
   KEY `device` (`device`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -269,7 +498,7 @@ CREATE TABLE IF NOT EXISTS `smart_presence_event` (
   PRIMARY KEY (`pid`),
   UNIQUE KEY `eventid` (`eventid`),
   KEY `device` (`device`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -334,7 +563,7 @@ CREATE TABLE IF NOT EXISTS `smart_temperature_event` (
   PRIMARY KEY (`pid`),
   UNIQUE KEY `eventid` (`eventid`),
   KEY `device` (`device`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -369,7 +598,7 @@ CREATE TABLE IF NOT EXISTS `smart_threeaxis_event` (
   PRIMARY KEY (`pid`),
   UNIQUE KEY `eventid` (`eventid`),
   KEY `device` (`device`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -391,6 +620,43 @@ CREATE TABLE IF NOT EXISTS `smart_threeaxis_recent` (
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `home`
+--
+ALTER TABLE `home`
+  ADD CONSTRAINT `home_ibfk_1` FOREIGN KEY (`location`) REFERENCES `home_location` (`id`);
+
+--
+-- Constraints for table `home_pushtospeech`
+--
+ALTER TABLE `home_pushtospeech`
+  ADD CONSTRAINT `home_pushtospeech_ibfk_1` FOREIGN KEY (`home`) REFERENCES `home` (`id`);
+
+--
+-- Constraints for table `home_pushtospeech_history`
+--
+ALTER TABLE `home_pushtospeech_history`
+  ADD CONSTRAINT `home_pushtospeech_history_ibfk_1` FOREIGN KEY (`pushtospeech`) REFERENCES `home_pushtospeech` (`id`);
+
+--
+-- Constraints for table `home_weather`
+--
+ALTER TABLE `home_weather`
+  ADD CONSTRAINT `home_weather_ibfk_1` FOREIGN KEY (`location`) REFERENCES `home_location` (`id`);
+
+--
+-- Constraints for table `person`
+--
+ALTER TABLE `person`
+  ADD CONSTRAINT `person_ibfk_1` FOREIGN KEY (`home`) REFERENCES `home` (`id`);
+
+--
+-- Constraints for table `person_location_event`
+--
+ALTER TABLE `person_location_event`
+  ADD CONSTRAINT `person_location_event_ibfk_1` FOREIGN KEY (`person`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `person_location_event_ibfk_2` FOREIGN KEY (`place`) REFERENCES `person_place` (`id`);
 
 --
 -- Constraints for table `smart_acceleration_event`
@@ -427,6 +693,25 @@ ALTER TABLE `smart_contact_event`
 --
 ALTER TABLE `smart_contact_recent`
   ADD CONSTRAINT `smart_contact_recent_ibfk_1` FOREIGN KEY (`device`) REFERENCES `smart_device` (`pid`);
+
+--
+-- Constraints for table `smart_device_details`
+--
+ALTER TABLE `smart_device_details`
+  ADD CONSTRAINT `smart_device_details_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `smart_device` (`pid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `smart_device_details_ibfk_2` FOREIGN KEY (`type`) REFERENCES `smart_device_type` (`pid`);
+
+--
+-- Constraints for table `smart_generic_event`
+--
+ALTER TABLE `smart_generic_event`
+  ADD CONSTRAINT `smart_generic_event_ibfk_1` FOREIGN KEY (`device`) REFERENCES `smart_device` (`pid`);
+
+--
+-- Constraints for table `smart_hub`
+--
+ALTER TABLE `smart_hub`
+  ADD CONSTRAINT `smart_hub_ibfk_1` FOREIGN KEY (`home`) REFERENCES `home` (`id`);
 
 --
 -- Constraints for table `smart_humidity_event`
