@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: cpdbr.cxyu3tup9vgc.us-east-1.rds.amazonaws.com
--- Generation Time: Dec 22, 2014 at 01:06 AM
+-- Generation Time: Dec 22, 2014 at 07:40 PM
 -- Server version: 5.5.40-log
 -- PHP Version: 5.4.35
 
@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS `home_location` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `latitude` double NOT NULL,
-  `longitude` double NOT NULL
+  `longitude` double NOT NULL,
+  `timezone` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
