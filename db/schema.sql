@@ -1,14 +1,19 @@
 -- phpMyAdmin SQL Dump
--- version 4.3.3
+-- version 4.3.6
 -- http://www.phpmyadmin.net
 --
--- Host: cpdbr.cxyu3tup9vgc.us-east-1.rds.amazonaws.com
--- Generation Time: Dec 22, 2014 at 07:40 PM
+-- Generation Time: Jan 10, 2015 at 02:40 AM
 -- Server version: 5.5.40-log
--- PHP Version: 5.4.35
+-- PHP Version: 5.4.36
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `shak`
@@ -24,6 +29,19 @@ CREATE TABLE IF NOT EXISTS `home` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `location` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home_latch`
+--
+
+CREATE TABLE IF NOT EXISTS `home_latch` (
+  `home` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `value` tinyint(1) NOT NULL,
+  `updated` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -542,6 +560,12 @@ ALTER TABLE `home`
 ADD PRIMARY KEY (`id`), ADD KEY `location` (`location`);
 
 --
+-- Indexes for table `home_latch`
+--
+ALTER TABLE `home_latch`
+ADD PRIMARY KEY (`home`,`name`);
+
+--
 -- Indexes for table `home_location`
 --
 ALTER TABLE `home_location`
@@ -1056,3 +1080,7 @@ ADD CONSTRAINT `smart_threeaxis_event_ibfk_1` FOREIGN KEY (`device`) REFERENCES 
 --
 ALTER TABLE `smart_threeaxis_recent`
 ADD CONSTRAINT `smart_threeaxis_recent_ibfk_1` FOREIGN KEY (`device`) REFERENCES `smart_device` (`pid`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
