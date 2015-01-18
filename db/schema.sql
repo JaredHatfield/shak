@@ -2,18 +2,12 @@
 -- version 4.3.6
 -- http://www.phpmyadmin.net
 --
--- Generation Time: Jan 10, 2015 at 02:40 AM
+-- Generation Time: Jan 18, 2015 at 08:32 PM
 -- Server version: 5.5.40-log
 -- PHP Version: 5.4.36
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `shak`
@@ -492,6 +486,33 @@ CREATE TABLE IF NOT EXISTS `smart_rssi_recent` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `smart_switch_event`
+--
+
+CREATE TABLE IF NOT EXISTS `smart_switch_event` (
+  `pid` bigint(20) NOT NULL,
+  `eventid` char(36) NOT NULL,
+  `device` int(11) NOT NULL,
+  `value` tinyint(1) NOT NULL,
+  `occurred` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `smart_switch_recent`
+--
+
+CREATE TABLE IF NOT EXISTS `smart_switch_recent` (
+  `eventid` char(36) NOT NULL,
+  `device` int(11) NOT NULL,
+  `value` tinyint(1) NOT NULL,
+  `occurred` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `smart_temperature_event`
 --
 
@@ -752,6 +773,18 @@ ALTER TABLE `smart_rssi_recent`
 ADD UNIQUE KEY `eventid` (`eventid`), ADD UNIQUE KEY `device` (`device`);
 
 --
+-- Indexes for table `smart_switch_event`
+--
+ALTER TABLE `smart_switch_event`
+ADD PRIMARY KEY (`pid`), ADD UNIQUE KEY `eventid` (`eventid`), ADD KEY `device` (`device`);
+
+--
+-- Indexes for table `smart_switch_recent`
+--
+ALTER TABLE `smart_switch_recent`
+ADD UNIQUE KEY `eventid` (`eventid`), ADD UNIQUE KEY `device` (`device`,`value`);
+
+--
 -- Indexes for table `smart_temperature_event`
 --
 ALTER TABLE `smart_temperature_event`
@@ -878,6 +911,11 @@ MODIFY `pid` bigint(20) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `smart_rssi_event`
 --
 ALTER TABLE `smart_rssi_event`
+MODIFY `pid` bigint(20) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `smart_switch_event`
+--
+ALTER TABLE `smart_switch_event`
 MODIFY `pid` bigint(20) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `smart_temperature_event`
@@ -1058,6 +1096,18 @@ ALTER TABLE `smart_rssi_recent`
 ADD CONSTRAINT `smart_rssi_recent_ibfk_1` FOREIGN KEY (`device`) REFERENCES `smart_device` (`pid`);
 
 --
+-- Constraints for table `smart_switch_event`
+--
+ALTER TABLE `smart_switch_event`
+ADD CONSTRAINT `smart_switch_event_ibfk_1` FOREIGN KEY (`device`) REFERENCES `smart_device` (`pid`);
+
+--
+-- Constraints for table `smart_switch_recent`
+--
+ALTER TABLE `smart_switch_recent`
+ADD CONSTRAINT `smart_switch_recent_ibfk_1` FOREIGN KEY (`device`) REFERENCES `smart_device` (`pid`);
+
+--
 -- Constraints for table `smart_temperature_event`
 --
 ALTER TABLE `smart_temperature_event`
@@ -1080,7 +1130,3 @@ ADD CONSTRAINT `smart_threeaxis_event_ibfk_1` FOREIGN KEY (`device`) REFERENCES 
 --
 ALTER TABLE `smart_threeaxis_recent`
 ADD CONSTRAINT `smart_threeaxis_recent_ibfk_1` FOREIGN KEY (`device`) REFERENCES `smart_device` (`pid`);
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
